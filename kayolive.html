@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TGFLIX - IPL </title>
+    <style>
+        :root {
+            --netflix-red: #E50914;
+            --netflix-black: #141414;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background-color: #000;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        /* Netflix Header - Fades in/out */
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 4%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, transparent 100%);
+            z-index: 100;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .logo {
+            color: var(--netflix-red);
+            font-size: 28px;
+            font-weight: bold;
+            text-decoration: none;
+            letter-spacing: -1px;
+            text-transform: uppercase;
+            pointer-events: auto;
+        }
+
+        /* Player Container */
+        .container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #000;
+        }
+
+        /* Info Overlay - Fades and slides slightly */
+        .info-overlay {
+            position: absolute;
+            bottom: 60px;
+            left: 4%;
+            z-index: 50;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.9);
+            pointer-events: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+
+        .title {
+            font-size: 3.5rem;
+            margin: 0;
+            font-weight: bold;
+        }
+
+        .meta {
+            font-size: 1.2rem;
+            color: #e5e5e5;
+            margin-top: 10px;
+        }
+
+        .badge {
+            border: 1px solid #fff;
+            padding: 0 5px;
+            font-size: 0.9rem;
+            margin-right: 10px;
+        }
+
+        /* Active State (Visible UI) applied via JS */
+        body.ui-visible .header,
+        body.ui-visible .info-overlay {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="ui-visible">
+
+    <div class="header">
+        <a href="https://tgflix.lovable.app/" class="logo">TGFLIX</a>
+    </div>
+
+    <div class="container">
+        <iframe 
+            src="https://sportseera2.pages.dev/Drm/P3?id=kayo" 
+            allowfullscreen 
+            allow="autoplay; encrypted-media; fullscreen">
+        </iframe>
+
+        <div class="info-overlay">
+            <h1 class="title">Live Sports</h1>
+            <div class="meta">
+                <span class="badge">1080P</span>
+                <span>2026</span> | <span>GT VS CSK</span> | <span> </span><br><br>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let timeout;
+        const body = document.body;
+
+        function showUI() {
+            // Add visibility class
+            body.classList.add('ui-visible');
+            
+            // Clear existing timeout to reset the timer
+            clearTimeout(timeout);
+            
+            // Hide UI after 3 seconds of no movement
+            timeout = setTimeout(() => {
+                body.classList.remove('ui-visible');
+            }, 3000);
+        }
+
+        // Detect user activity
+        document.addEventListener('mousemove', showUI);
+        document.addEventListener('mousedown', showUI);
+        document.addEventListener('keydown', showUI);
+        document.addEventListener('touchstart', showUI);
+
+        // Keep UI visible if the user is hovering over the header (logo area)
+        const header = document.querySelector('.header');
+        header.addEventListener('mouseenter', () => {
+            clearTimeout(timeout);
+            body.classList.add('ui-visible');
+        });
+
+        // Initialize visibility on load
+        showUI();
+    </script>
+</body>
+</html>
