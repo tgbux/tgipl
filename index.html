@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>TGFLIX - Live Sports</title>
+<title>TGFLIX</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
 
 <style>
+
 :root{
-    --netflix-red:#E50914;
+    --red:#E50914;
 }
 
 *{
@@ -17,292 +20,210 @@
     box-sizing:border-box;
 }
 
-html,
-body{
-    width:100%;
-    height:100%;
-    overflow:hidden;
-    background:#000;
-    font-family:Arial, Helvetica, sans-serif;
-    -webkit-tap-highlight-color:transparent;
-}
-
-body{
-    color:#fff;
-}
-
-/* PLAYER */
-.player-container{
-    position:fixed;
-    inset:0;
+html,body{
     width:100%;
     height:100%;
     background:#000;
     overflow:hidden;
+    font-family:'Roboto',sans-serif;
 }
 
-iframe{
-    width:100%;
-    height:100%;
-    border:none;
-    background:#000;
+/* ================= HEADER ================= */
 
-    /* MOBILE FIX */
-    position:absolute;
-    top:0;
-    left:0;
-
-    transform:translateZ(0);
-    -webkit-transform:translateZ(0);
-
-    backface-visibility:hidden;
-    -webkit-backface-visibility:hidden;
-
-    will-change:transform;
-}
-
-/* HEADER */
-.header{
+header{
     position:fixed;
     top:0;
     left:0;
     width:100%;
-    z-index:999;
+    height:80px;
 
-    padding:20px 4%;
-
-    background:linear-gradient(
-        to bottom,
-        rgba(0,0,0,0.9),
-        transparent
-    );
+    z-index:9999;
 
     display:flex;
+    justify-content:space-between;
     align-items:center;
 
-    opacity:0;
-    transition:0.3s;
-    pointer-events:none;
+    padding:15px 20px;
+
+    background:rgba(0,0,0,0.85);
+    backdrop-filter:blur(10px);
 }
 
 .logo{
-    color:var(--netflix-red);
+    color:var(--red);
+    font-size:2.5rem;
+    font-weight:900;
     text-decoration:none;
-    font-size:30px;
-    font-weight:bold;
-    letter-spacing:-1px;
-    pointer-events:auto;
 }
 
-/* INFO */
-.info{
-    position:absolute;
-    left:4%;
-    bottom:60px;
-    z-index:100;
+/* ================= BUTTONS ================= */
 
-    opacity:0;
-    transform:translateY(20px);
-    transition:0.3s;
-
-    text-shadow:0 2px 10px rgba(0,0,0,0.8);
-}
-
-.title{
-    font-size:clamp(2rem,7vw,4rem);
-    font-weight:700;
-    margin-bottom:10px;
-}
-
-.meta{
-    font-size:1rem;
-    color:#ddd;
-}
-
-.badge{
-    border:1px solid #fff;
-    padding:2px 7px;
-    margin-right:10px;
-    font-size:.8rem;
-}
-
-/* SHOW UI */
-body.show-ui .header,
-body.show-ui .info{
-    opacity:1;
-    transform:translateY(0);
-}
-
-/* MOBILE SAFE AREA */
-@supports (padding:max(0px)){
-
-    .header{
-        padding-top:max(20px, env(safe-area-inset-top));
-    }
-
-    .info{
-        bottom:max(60px, env(safe-area-inset-bottom));
-    }
-}
-
-/* LOADER */
-.loader{
-    position:fixed;
-    inset:0;
-    z-index:2000;
-
+.player-controls{
     display:flex;
-    align-items:center;
-    justify-content:center;
+    gap:12px;
+}
+
+.btn-switch{
+    border:none;
+    padding:12px 22px;
+    border-radius:12px;
+
+    background:rgba(255,255,255,0.12);
+
+    color:#fff;
+    font-size:16px;
+    font-weight:700;
+
+    cursor:pointer;
+    transition:0.25s;
+}
+
+.btn-switch.active{
+    background:var(--red);
+}
+
+/* ================= MAIN ================= */
+
+#main-container{
+    width:100%;
+    height:100%;
+    position:relative;
+}
+
+/* ================= PLAYERS ================= */
+
+.player-box{
+    position:absolute;
+
+    top:80px;
+    left:0;
+
+    width:100%;
+    height:calc(100vh - 80px);
 
     background:#000;
-    color:#fff;
-    font-size:18px;
 }
 
-.loader.hide{
-    display:none;
+/* ================= PLAYER ================= */
+
+.player2-frame{
+    width:100%;
+    height:100%;
+    border:none;
 }
+
+/* hidden player */
+.hidden{
+    opacity:0;
+    pointer-events:none;
+    z-index:-1;
+}
+
+/* active player */
+.active{
+    opacity:1;
+    pointer-events:auto;
+    z-index:1;
+}
+
+/* ================= MOBILE ================= */
+
+@media(max-width:768px){
+
+    header{
+        height:auto;
+        padding:12px;
+        flex-direction:column;
+        gap:10px;
+    }
+
+    .logo{
+        font-size:2rem;
+    }
+
+    .btn-switch{
+        font-size:14px;
+        padding:10px 16px;
+    }
+
+    .player-box{
+        top:120px;
+        height:calc(100vh - 120px);
+    }
+}
+
 </style>
 </head>
 
-<body class="show-ui">
+<body>
 
-<div class="loader" id="loader">
-    Loading Stream...
-</div>
+<header>
 
-<!-- HEADER -->
-<div class="header">
-    <a href="https://tgflix.lovable.app/" class="logo">
-        TGFLIX
-    </a>
-</div>
+    <a href="https://tgflix.lovable.app/" target="_blank" class="logo">TGFLIX</a>
 
-<!-- PLAYER -->
-<div class="player-container">
+    <div class="player-controls">
 
-    <iframe
-        id="player"
+        <button
+            id="btn1"
+            class="btn-switch"
+            onclick="goAdFree()">
+            Kayo Ad Free
+        </button>
 
-        src="https://sportseera2.pages.dev/Drm/P3?id=kayo"
+        <button
+            id="btn2"
+            class="btn-switch active"
+            onclick="switchPlayer(2)">
+            Hindi HD
+        </button>
 
-        allow="
-        autoplay;
-        encrypted-media;
-        fullscreen;
-        picture-in-picture"
+    </div>
 
-        allowfullscreen
-        webkitallowfullscreen
-        mozallowfullscreen
+</header>
 
-        referrerpolicy="no-referrer"
-        loading="eager">
-    </iframe>
+<div id="main-container">
 
-    <!-- INFO -->
-    <div class="info">
-        <h1 class="title">
-            Live Sports
-        </h1>
+    <!-- PLAYER -->
 
-        <div class="meta">
-            <span class="badge">1080P</span>
-            <span>2026</span> |
-            <span>GT VS CSK</span>
-        </div>
+    <div id="player2" class="player-box active">
+
+        <iframe
+            id="iframe2"
+            class="player2-frame"
+            frameborder="0"
+            allow="autoplay; encrypted-media; fullscreen"
+            allowfullscreen>
+        </iframe>
+
     </div>
 
 </div>
 
 <script>
-const body = document.body;
-const iframe = document.getElementById("player");
-const loader = document.getElementById("loader");
 
-let timeout;
+const iframe2 = document.getElementById("iframe2");
 
-/* SHOW/HIDE UI */
-function showUI(){
+const player2URL =
+"https://sportseera1.pages.dev/star?id=sidhu";
 
-    body.classList.add("show-ui");
+/* Default load Hindi HD */
+iframe2.src = player2URL;
 
-    clearTimeout(timeout);
-
-    timeout = setTimeout(() => {
-        body.classList.remove("show-ui");
-    },3000);
+function goAdFree(){
+    window.location.href = "https://tgipl.my.to/";
 }
 
-/* EVENTS */
-[
-    "mousemove",
-    "touchstart",
-    "touchmove",
-    "click",
-    "keydown"
-].forEach(event => {
-    document.addEventListener(event, showUI, {
-        passive:true
-    });
-});
+function switchPlayer(player){
 
-/* INITIAL */
-showUI();
+    if(player === 2){
 
-/* HIDE LOADER */
-iframe.onload = () => {
+        document.getElementById("btn1").classList.remove("active");
+        document.getElementById("btn2").classList.add("active");
 
-    setTimeout(() => {
-        loader.classList.add("hide");
-    },1000);
-
-};
-
-/* MOBILE BLACK SCREEN FIX */
-window.addEventListener("load", () => {
-
-    setTimeout(() => {
-
-        iframe.style.display = "none";
-
-        requestAnimationFrame(() => {
-
-            iframe.style.display = "block";
-
-        });
-
-    },500);
-
-});
-
-/* ANDROID + iOS RESIZE FIX */
-function resizeFix(){
-
-    document.documentElement.style.height =
-        window.innerHeight + "px";
-
-    document.body.style.height =
-        window.innerHeight + "px";
-
-}
-
-window.addEventListener("resize", resizeFix);
-window.addEventListener("orientationchange", resizeFix);
-
-resizeFix();
-
-/* EXTRA SAFARI FIX */
-document.addEventListener("visibilitychange", () => {
-
-    if(!document.hidden){
-
-        iframe.src = iframe.src;
-
+        iframe2.src = player2URL + "&t=" + Date.now();
     }
+}
 
-});
 </script>
 
 </body>
